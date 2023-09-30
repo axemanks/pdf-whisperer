@@ -12,6 +12,10 @@ react-loading-skeleton - loading
 date-fns - style the date
 react-pdf - the pdf viewer
 react-dropzone - file drag and drop - upload
+react-resize-detector - resize pdf
+react-hook-form - makes sure value user inputs is valid
+hookform/resolvers - zodresolver - link form validation library to schema validation library
+simplebar-react - adds scrollbars when zoomed
 
 
 Kinde- Auth https://kinde.com/ - npm i @kinde-oss/kinde-auth-nextjs
