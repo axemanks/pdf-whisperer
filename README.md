@@ -16,8 +16,17 @@ react-resize-detector - resize pdf
 react-hook-form - makes sure value user inputs is valid
 hookform/resolvers - zodresolver - link form validation library to schema validation library
 simplebar-react - adds scrollbars when zoomed
+react-textarea-autosize - to expand the input box where there are mutlitple rows
+react-markdown - message formatting
+
 
 
 Kinde- Auth https://kinde.com/ - npm i @kinde-oss/kinde-auth-nextjs
 tRPC - https://trpc.io/docs/client/nextjs/setup - A typesafe wrapper for react query
 Uploadthing - file uploads on S3
+Pinecone.io - embeddings
+Langchain - AI tools
+pdf-parse (needed by langchain)
+OpenAI - AI LLM
+Vercel AI - tools -streaming resonse
+

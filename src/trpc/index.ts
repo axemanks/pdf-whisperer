@@ -4,6 +4,7 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '../db/index';
 import { z } from 'zod';
+import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query';
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -40,22 +41,88 @@ export const appRouter = router({
       },
     });
   }),
+  getFileMessages: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+        fileId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { userId } = ctx;
+      const { fileId, cursor } = input;
+      const limit = input.limit ?? INFINITE_QUERY_LIMIT;
+
+      const file = await db.file.findFirst({
+        where: {
+          id: fileId,
+          userId,
+        },
+      });
+      if (!file) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      // get messages
+      const messages = await db.message.findMany({
+        take: limit + 1,
+        where: {
+          fileId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        cursor: cursor ? { id: cursor } : undefined,
+        select: {
+          id: true,
+          isUserMessage: true,
+          createdAt: true,
+          text: true,
+        },
+      });
+
+      // logic for cursor
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (messages.length > limit) {
+        const nextItem = messages.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        messages,
+        nextCursor,
+      };
+    }),
+
+  getFileUploadStatus: privateProcedure
+    .input(z.object({ fileId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      // find file and check status
+      const file = await db.file.findFirst({
+        where: {
+          id: input.fileId,
+          userId: ctx.userId,
+        },
+      });
+      // return status of file
+      if (!file) return { status: 'PENDING' as const }; // upload status enum
+      return { status: file.uploadStatus };
+    }),
 
   getFile: privateProcedure
     .input(z.object({ key: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { userId } = ctx
-      
+      const { userId } = ctx;
+
       const file = await db.file.findFirst({
         where: {
           key: input.key,
           userId,
         },
-      })
+      });
 
-      if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
+      if (!file) throw new TRPCError({ code: 'NOT_FOUND' });
 
-      return file
+      return file;
     }),
 
   deleteFile: privateProcedure

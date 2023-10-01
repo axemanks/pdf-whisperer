@@ -18,7 +18,7 @@ export default function Home() {
           seconds.
         </h1>
         <p className='mt-5 max-w-prose text-zinc-700 sm:text-xl'>
-          The PDF Whispere allows you to have conversations with any PDF
+          The PDF Whisperer allows you to have conversations with any PDF
           document. Simply upload your file and start asking questions right
           away.
         </p>
