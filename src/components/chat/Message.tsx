@@ -1,26 +1,24 @@
-import { cn } from '@/lib/utils';
-import { ExtendedMessage } from '@/types/message';
-import { Icons } from '../Icons';
-import ReactMarkdown from 'react-markdown';
-import { format } from 'date-fns';
-import { useContext } from 'react';
-import { ChatContext } from './ChatContext';
+import { cn } from '@/lib/utils'
+import { ExtendedMessage } from '@/types/message'
+import { Icons } from '../Icons'
+import ReactMarkdown from 'react-markdown'
+import { format } from 'date-fns'
+import { forwardRef } from 'react'
 
 interface MessageProps {
-  message: ExtendedMessage;
-  isNextMessageSamePerson: boolean;
+  message: ExtendedMessage
+  isNextMessageSamePerson: boolean
 }
 
-const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
-
-  return (
-    <div
-      className={cn(`flex items-end`, {
-        'justify-end': message.isUserMessage,
-      })}
-    >
-      {/* user icon */}
+const Message = forwardRef<HTMLDivElement, MessageProps>(
+  ({ message, isNextMessageSamePerson }, ref) => {
+    return (
       <div
+        ref={ref}
+        className={cn('flex items-end', {
+          'justify-end': message.isUserMessage,
+        })}>
+        <div
           className={cn(
             'relative flex h-6 w-6 aspect-square items-center justify-center',
             {
@@ -31,14 +29,14 @@ const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
               invisible: isNextMessageSamePerson,
             }
           )}>
-        {message.isUserMessage ? (
+          {message.isUserMessage ? (
             <Icons.user className='fill-zinc-200 text-zinc-200 h-3/4 w-3/4' />
           ) : (
             <Icons.logo className='fill-zinc-300 h-3/4 w-3/4' />
           )}
-      </div>
+        </div>
 
-      <div
+        <div
           className={cn(
             'flex flex-col space-y-2 text-base max-w-md mx-2',
             {
@@ -46,7 +44,7 @@ const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
               'order-2 items-start': !message.isUserMessage,
             }
           )}>
-         <div
+          <div
             className={cn(
               'px-4 py-2 rounded-lg inline-block',
               {
@@ -62,7 +60,7 @@ const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
                   !message.isUserMessage,
               }
             )}>
-           {typeof message.text === 'string' ? (
+            {typeof message.text === 'string' ? (
               <ReactMarkdown
                 className={cn('prose', {
                   'text-zinc-50': message.isUserMessage,
@@ -72,7 +70,7 @@ const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
             ) : (
               message.text
             )}
-          {message.id !== 'loading-message' ? (
+            {message.id !== 'loading-message' ? (
               <div
                 className={cn(
                   'text-xs select-none mt-2 w-full text-right',
@@ -81,18 +79,19 @@ const Message = ({ message, isNextMessageSamePerson }: MessageProps) => {
                     'text-blue-300': message.isUserMessage,
                   }
                 )}>
-               {format(
+                {format(
                   new Date(message.createdAt),
                   'HH:mm'
                 )}
-            </div>
-          ): null}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    )
+  }
+)
 
 Message.displayName = 'Message'
 
-export default Message;
+export default Message

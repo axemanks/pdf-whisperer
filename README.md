@@ -18,6 +18,7 @@ hookform/resolvers - zodresolver - link form validation library to schema valida
 simplebar-react - adds scrollbars when zoomed
 react-textarea-autosize - to expand the input box where there are mutlitple rows
 react-markdown - message formatting
+@mantine/hooks - intersection - render messages
 
 
 
