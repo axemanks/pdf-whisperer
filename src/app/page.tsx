@@ -29,9 +29,10 @@ export default function Home() {
             className: 'mt-5',
           })}
           href={'/dashboard'}
-          target='_blank'
+          // target='_blank' - this is causing a new tab to open b/c of pop up blocker
         >
-          Get Started <ArrowRight className='ml-2 h-5 w-5' />
+          Get Started {' '}
+          <ArrowRight className='ml-2 h-5 w-5' />
         </Link>
       </MaxWidthWrapper>
 

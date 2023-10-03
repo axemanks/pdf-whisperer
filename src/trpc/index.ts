@@ -17,7 +17,7 @@ export const appRouter = router({
         id: user.id,
       },
     });
-
+    // if not, create it
     if (!dbUser) {
       console.log('User First time login, adding to db');
       // create user in db

@@ -62,10 +62,10 @@ export const ChatContextProvider = ({
       }
 
       return response.body
-    },
+    }, // gets called as soon as enter is pressed
     onMutate: async ({ message }) => {
-      backupMessage.current = message
-      setMessage('')
+      backupMessage.current = message // backup the message in case of error
+      setMessage('') // clears the input
 
       // step 1
       await utils.getFileMessages.cancel()
@@ -209,7 +209,6 @@ export const ChatContextProvider = ({
     },
     onSettled: async () => {
       setIsLoading(false)
-
       await utils.getFileMessages.invalidate({ fileId })
     },
   })
