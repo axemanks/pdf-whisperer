@@ -30,4 +30,5 @@ Langchain - AI tools
 pdf-parse (needed by langchain)
 OpenAI - AI LLM
 Vercel AI - tools -streaming resonse
+Stripe - payments
 
