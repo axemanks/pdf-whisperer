@@ -13,7 +13,7 @@
     "@kinde-oss/kinde-auth-nextjs": "^1.8.21",
     "@mantine/hooks": "^7.1.0",
     "@pinecone-database/pinecone": "^1.1.0",
-    "@prisma/client": "^4.15.0",
+    "@prisma/client": "^4.16.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-progress": "^1.0.3",
@@ -60,7 +60,7 @@
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
-    "prisma": "^4.15.0",
+    "prisma": "^4.16.2",
     "tailwindcss": "latest",
     "typescript": "latest"
   }
