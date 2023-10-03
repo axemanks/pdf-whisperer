@@ -1,26 +1,28 @@
-'use client'
+// Mobile menu
+'use client';
 
-import { ArrowRight, Menu } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { ArrowRight, Menu } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const MobileNav = ({ isAuth }: { isAuth: boolean }) => {
-  const [isOpen, setOpen] = useState<boolean>(false)
+  const [isOpen, setOpen] = useState<boolean>(false);
+  // toggle
+  const toggleOpen = () => setOpen((prev) => !prev);
 
-  const toggleOpen = () => setOpen((prev) => !prev)
-
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (isOpen) toggleOpen()
-  }, [pathname])
+    if (isOpen) toggleOpen();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const closeOnCurrent = (href: string) => {
     if (pathname === href) {
-      toggleOpen()
+      toggleOpen();
     }
-  }
+  };
 
   return (
     <div className='sm:hidden'>
@@ -33,50 +35,52 @@ const MobileNav = ({ isAuth }: { isAuth: boolean }) => {
         <div className='fixed animate-in slide-in-from-top-5 fade-in-20 inset-0 z-0 w-full'>
           <ul className='absolute bg-white border-b border-zinc-200 shadow-xl grid w-full gap-3 px-10 pt-20 pb-8'>
             {!isAuth ? (
+                // Not Authenticated
               <>
                 <li>
+                    {/* Sign Up */}
                   <Link
-                    onClick={() =>
-                      closeOnCurrent('/sign-up')
-                    }
-                    className='flex items-center w-full font-semibold text-green-600'
-                    href='/sign-up'>
-                    Get started
+                    onClick={() => closeOnCurrent('/sign-up')}
+                    className='flex items-center w-full font-semibold text-blue-600'
+                    href='/sign-up'
+                  >
+                    Get Started
                     <ArrowRight className='ml-2 h-5 w-5' />
                   </Link>
                 </li>
+                {/* seperator */}
                 <li className='my-3 h-px w-full bg-gray-300' />
                 <li>
+                    {/* Sign In */}
                   <Link
-                    onClick={() =>
-                      closeOnCurrent('/sign-in')
-                    }
+                    onClick={() => closeOnCurrent('/sign-in')}
                     className='flex items-center w-full font-semibold'
-                    href='/sign-in'>
+                    href='/sign-in'
+                  >
                     Sign in
                   </Link>
                 </li>
                 <li className='my-3 h-px w-full bg-gray-300' />
                 <li>
+                    {/* Link to Pricing */}
                   <Link
-                    onClick={() =>
-                      closeOnCurrent('/pricing')
-                    }
+                    onClick={() => closeOnCurrent('/pricing')}
                     className='flex items-center w-full font-semibold'
-                    href='/pricing'>
+                    href='/pricing'
+                  >
                     Pricing
                   </Link>
                 </li>
               </>
             ) : (
+                // when user IS authenticated
               <>
                 <li>
                   <Link
-                    onClick={() =>
-                      closeOnCurrent('/dashboard')
-                    }
+                    onClick={() => closeOnCurrent('/dashboard')}
                     className='flex items-center w-full font-semibold'
-                    href='/dashboard'>
+                    href='/dashboard'
+                  >
                     Dashboard
                   </Link>
                 </li>
@@ -84,7 +88,8 @@ const MobileNav = ({ isAuth }: { isAuth: boolean }) => {
                 <li>
                   <Link
                     className='flex items-center w-full font-semibold'
-                    href='/sign-out'>
+                    href='/sign-out'
+                  >
                     Sign out
                   </Link>
                 </li>
@@ -94,7 +99,7 @@ const MobileNav = ({ isAuth }: { isAuth: boolean }) => {
         </div>
       ) : null}
     </div>
-  )
-}
+  );
+};
 
-export default MobileNav
+export default MobileNav;
