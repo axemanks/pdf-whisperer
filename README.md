@@ -32,3 +32,4 @@ OpenAI - AI LLM
 Vercel AI - tools -streaming resonse
 Stripe - payments
 
+change file limits in core.ts

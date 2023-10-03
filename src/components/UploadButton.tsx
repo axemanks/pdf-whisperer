@@ -13,18 +13,20 @@ import { useToast } from './ui/use-toast';
 import { trpc } from '@/app/_trpc/client';
 import { useRouter } from 'next/navigation';
 
-const UploadDropzone = () => {
+const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const router = useRouter();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const {toast} = useToast();
+  const { toast } = useToast();
 
-  const {startUpload} = useUploadThing("pdfUploader")
+  const { startUpload } = useUploadThing(
+    isSubscribed ? 'proPlanUploader' : 'freePlanUploader'
+  );
 
-  const {mutate: startPolling} = trpc.getFile.useMutation({
+  const { mutate: startPolling } = trpc.getFile.useMutation({
     onSuccess: (file) => {
       // when the file is success redirect
-      router.push(`/dashboard/${file.id}`)
+      router.push(`/dashboard/${file.id}`);
     },
     retry: true, // the polling will retry if it fails
     retryDelay: 5000, // retry every .5 seconds
@@ -59,28 +61,27 @@ const UploadDropzone = () => {
         const progressInterval = startSimulatedProgress();
         // handle the file upload
         const res = await startUpload(acceptedFile);
-        if(!res){
+        if (!res) {
           return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          })
+            title: 'Something went wrong',
+            description: 'Please try again later',
+            variant: 'destructive',
+          });
         }
         const [flieResponse] = res; // get first element of the response
 
         const key = flieResponse.key; // file key
-        if(!key) {
+        if (!key) {
           return toast({
-            title: "Something went wrong",
-            description: "Please try again later",
-            variant: "destructive",
-          })
+            title: 'Something went wrong',
+            description: 'Please try again later',
+            variant: 'destructive',
+          });
         }
-
 
         clearInterval(progressInterval);
         setUploadProgress(100);
-        startPolling({key}); // start polling for the file
+        startPolling({ key }); // start polling for the file
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
@@ -100,7 +101,9 @@ const UploadDropzone = () => {
                   <span className='font-semibold'>Click to upload</span> or drag
                   and drop
                 </p>
-                <p className='text-xs text-zinc-500'>PDF (up to 4MB)</p>
+                <p className='text-xs text-zinc-500'>
+                  PDF (up to {isSubscribed ? '16' : '4'}MB)
+                </p>
               </div>
               {/* File preview */}
               {acceptedFiles && acceptedFiles[0] ? (
@@ -125,16 +128,20 @@ const UploadDropzone = () => {
                       uploadProgress === 100 ? 'bg-green-500' : ''
                     }
                   />
-                   {uploadProgress === 100 ? (
+                  {uploadProgress === 100 ? (
                     <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
                       <Loader2 className='h-3 w-3 animate-spin' />
                       Redirecting...
                     </div>
-                   ): null}
+                  ) : null}
                 </div>
-               
               ) : null}
-              <input {...getInputProps} type="file" id='dropzone-file' className='hidden' />
+              <input
+                {...getInputProps}
+                type='file'
+                id='dropzone-file'
+                className='hidden'
+              />
             </label>
           </div>
         </div>
@@ -143,7 +150,7 @@ const UploadDropzone = () => {
   );
 };
 
-const UploadButton = () => {
+const UploadButton = ({ isSubscribed }: { isSubscribed: boolean }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -163,7 +170,7 @@ const UploadButton = () => {
       </DialogTrigger>
 
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone isSubscribed={isSubscribed} />
       </DialogContent>
     </Dialog>
   );
