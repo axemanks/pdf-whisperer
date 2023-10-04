@@ -45,14 +45,14 @@ const Navbar = () => {
                     size: 'sm',
                   })}
                 >
-                  Sign in
+                  Log In
                 </LoginLink>
                 <RegisterLink
                   className={buttonVariants({
                     size: 'sm',
                   })}
                 >
-                  Get started <ArrowRight className='ml-1.5 h-5 w-5' />
+                  Sign Up <ArrowRight className='ml-1.5 h-5 w-5' />
                 </RegisterLink>
               </>
             ) : (

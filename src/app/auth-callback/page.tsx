@@ -1,4 +1,3 @@
-// auth-callback - to sync the logged in user session to auth db
 "use client"
 
 import { useRouter, useSearchParams } from 'next/navigation'

@@ -1,4 +1,3 @@
-// stripe webhookimport { db } from '@/db'
 import { db } from '@/db'
 import { stripe } from '@/lib/stripe'
 import { headers } from 'next/headers'
@@ -6,11 +5,10 @@ import type Stripe from 'stripe'
 
 export async function POST(request: Request) {
   const body = await request.text()
-  // Get Stripe Signature from headers
-  const signature = headers().get('Stripe-Signature') ?? '' 
+  const signature = headers().get('Stripe-Signature') ?? ''
 
   let event: Stripe.Event
-  // validate the request actually came from stripe
+
   try {
     event = stripe.webhooks.constructEvent(
       body,
@@ -40,7 +38,7 @@ export async function POST(request: Request) {
       await stripe.subscriptions.retrieve(
         session.subscription as string
       )
-    // update the user with the subscription details
+
     await db.user.update({
       where: {
         id: session.metadata.userId,
