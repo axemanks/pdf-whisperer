@@ -1,23 +1,39 @@
 'use client';
 import { trpc } from '@/app/_trpc/client';
 import UploadButton from './UploadButton';
-import { Ghost, Loader2, MessageSquare, Plug, Plus, Trash, UploadCloud } from 'lucide-react';
+import {
+  Ghost,
+  Loader2,
+  MessageSquare,
+  Plug,
+  Plus,
+  Trash,
+  UploadCloud,
+} from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import Link from 'next/link';
 import { format } from 'date-fns'; // to make the date pretty
 import { Button } from './ui/button';
 import { useState } from 'react';
 import { getUserSubscriptionPlan } from '@/lib/stripe';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 
 interface PageProps {
   subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
 }
 
-const Dashboard = ({ subscriptionPlan}: PageProps) => {
-  const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<string | null>(null);
+const Dashboard = ({ subscriptionPlan }: PageProps) => {
+  const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
+    string | null
+  >(null);
   const utils = trpc.useContext();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
-  const { mutate: deleteFile} = trpc.deleteFile.useMutation({
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess: () => {
       utils.getUserFiles.invalidate();
     },
@@ -26,7 +42,7 @@ const Dashboard = ({ subscriptionPlan}: PageProps) => {
     },
     onSettled() {
       setCurrentlyDeletingFile(null);
-    }
+    },
   });
 
   return (
@@ -39,76 +55,96 @@ const Dashboard = ({ subscriptionPlan}: PageProps) => {
       </div>
 
       {/* Display files */}
-      {files && files?.length !== 0 ? (
-        <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3'>
-          {files
-          // sort by created date
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-            // map out the files
-            .map((file) => (
-              // into the list item
-              <li
-                key={file.id}
-                className='cols-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg'
-              >
-                <Link
-                  href={`/dashboard/${file.id}`}
-                  className='flex flex-col gap-2'
+      <TooltipProvider>
+        {files && files?.length !== 0 ? (
+          <ul className='mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3'>
+            {files
+              // sort by created date
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              )
+              // map out the files
+              .map((file) => (
+                // into the list item
+                <li
+                  key={file.id}
+                  className='cols-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg'
                 >
-                  <div className='pt-6 px-6 flex w-full items-center justify-between space-x-6'>
-                    <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500' />
-                    <div className='flex-1 truncate'>
-                      <div className='flex items-center space-x-3 '>
-                        <h3 className='truncate text-lg font-medium text-zinc-900'>
-                          {file.name}
-                        </h3>
+                  <Link
+                    href={`/dashboard/${file.id}`}
+                    className='flex flex-col gap-2'
+                  >
+                    <div className='pt-6 px-6 flex w-full items-center justify-between space-x-6'>
+                      <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500' />
+                      <div className='flex-1 truncate'>
+                        <div className='flex items-center space-x-3 '>
+                          <h3 className='truncate text-lg font-medium text-zinc-900'>
+                            {file.name}
+                          </h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-                <div className='px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500'>
-                  <div className='flex items-center gap-2'>
-                    <UploadCloud className='h-4 w-4' />
-                    {format(new Date(file.createdAt), 'MMM dd yyyy')}
-                  </div>
+                  </Link>
+                  <div className='px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500'>
+                    <Tooltip delayDuration={250}>
+                      <TooltipTrigger className='cursor-default'>
+                        <div className='flex items-center gap-2'>
+                          <UploadCloud className='h-4 w-4' />
+                          {format(new Date(file.createdAt), 'MMM dd yyyy')}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>Date file was uploaded</TooltipContent>
+                    </Tooltip>
 
-                  <div className='flex items-center gap-2'>
-                    <MessageSquare className='h-4 w-4' />
-                    {file.messageCount}
-                  </div>
+                    {/* Message Count */}
+                    <Tooltip delayDuration={250}>
+                      <div className='flex items-center gap-2'>
+                        <TooltipTrigger className='cursor-default'>
+                          <MessageSquare className='h-4 w-4' />
+                          {file.messageCount}
+                        </TooltipTrigger>
+                        <TooltipContent>Number of chat messages</TooltipContent>
+                      </div>
+                    </Tooltip>
 
-                  {/* Delete */}
-                  <Button
-                  onClick={() => deleteFile({id: file.id})}
-                    size={'sm'}
-                    className='w-full'
-                    variant='destructive'
-                  >
-                    {currentlyDeletingFile === file.id ? (
-                      <Loader2 className='h-4 w-4 animate-spin' />
-                    ): <Trash className='h-4 w-4' />}
-                  </Button>
-                </div>
-              </li>
-            ))}
-        </ul>
-      ) : isLoading ? (
-        <Skeleton
-          height={100}
-          className='my-2'
-          count={3}
-        />
-      ) : (
-        <div className='mt-16 flex flex-col items-center gap-2'>
-          <Ghost className='h-8 w-8 text-zinc-800' />
-          <h3 className='font-semibold text-xl'>Pretty empty around here</h3>
-          <p className=''>Let&apos;s upload your first PDF.</p>
-        </div>
-      )}
+                    {/* Delete */}
+                    <Tooltip delayDuration={250}>
+                      <TooltipTrigger className='cursor-default'>
+                        <Button
+                          onClick={() => deleteFile({ id: file.id })}
+                          size={'sm'}
+                          className='w-full'
+                          variant='destructive'
+                        >
+                          {currentlyDeletingFile === file.id ? (
+                            <Loader2 className='h-4 w-4 animate-spin' />
+                          ) : (
+                            <Trash className='h-4 w-4' />
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Delete File</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </li>
+              ))}
+          </ul>
+        ) : isLoading ? (
+          <Skeleton
+            height={100}
+            className='my-2'
+            count={3}
+          />
+        ) : (
+          <div className='mt-16 flex flex-col items-center gap-2'>
+            <Ghost className='h-8 w-8 text-zinc-800' />
+            <h3 className='font-semibold text-xl'>Pretty empty around here</h3>
+            <p className=''>Let&apos;s upload your first PDF.</p>
+          </div>
+        )}
+      </TooltipProvider>
     </main>
   );
 };
