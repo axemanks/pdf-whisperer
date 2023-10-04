@@ -3,8 +3,13 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import Image from 'next/image'
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
 export default function Home() {
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+
   return (
     <>
       <MaxWidthWrapper className='mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center'>
@@ -23,18 +28,30 @@ export default function Home() {
           PDF document. Simply upload your file and start
           asking questions right away.
         </p>
-
-        <Link
-          className={buttonVariants({
-            size: 'lg',
-            className: 'mt-5',
-          })}
-          href='/dashboard'
-          // target='_blank'
+        {/* Conditonal reder of Sign-in | Dashboard button */}
+        {user ? (
+          <Link
+            className={buttonVariants({
+              size: 'lg',
+              className: 'mt-5',
+            })}
+            href='/dashboard'
+            // target='_blank'
           >
-          Get started{' '}
-          <ArrowRight className='ml-2 h-5 w-5' />
-        </Link>
+            Get started <ArrowRight className='ml-2 h-5 w-5' />
+          </Link>
+        ) : (
+          <Link
+            className={buttonVariants({
+              size: 'lg',
+              className: 'mt-5',
+            })}
+            href='/sign-in'
+            // target='_blank'
+          >
+            Sign-In <ArrowRight className='ml-2 h-5 w-5' />
+          </Link>
+        )}
       </MaxWidthWrapper>
 
       {/* value proposition section */}
