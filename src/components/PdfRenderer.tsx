@@ -7,6 +7,8 @@ import 'react-pdf/dist/Page/TextLayer.css';
 import { Document, Page, pdfjs } from 'react-pdf';
 import {
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
   Divide,
   Loader2,
@@ -93,7 +95,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             aria-label='previous page'
             variant={'ghost'}
           >
-            <ChevronDown className='h-4 w-4' />
+            <ChevronLeft className='h-4 w-4' />
           </Button>
 
           {/* Page input */}
@@ -128,7 +130,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             aria-label='next page'
             variant={'ghost'}
           >
-            <ChevronUp className='h-4 w-4' />
+            <ChevronRight className='h-4 w-4' />
           </Button>
         </div>
           
