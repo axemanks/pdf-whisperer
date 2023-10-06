@@ -5,7 +5,7 @@ import { useContext, useRef } from 'react'
 import { ChatContext } from './ChatContext'
 
 interface ChatInputProps {
-  isDisabled?: boolean
+  isDisabled?: boolean 
 }
 
 const ChatInput = ({ isDisabled }: ChatInputProps) => {
@@ -17,6 +17,8 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
   } = useContext(ChatContext)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  console.log("Disabled?", isDisabled)
+  console.log("IsLoading?", isLoading)
 
   return (
     <div className='absolute bottom-0 left-0 w-full'>
@@ -45,7 +47,7 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
               />
 
               <Button
-                disabled={isLoading || isDisabled}
+                disabled={isLoading || !isDisabled}
                 className='absolute bottom-1.5 right-[8px]'
                 aria-label='send message'
                 onClick={() => {
