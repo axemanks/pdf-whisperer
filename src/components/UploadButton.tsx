@@ -98,8 +98,8 @@ const UploadDropzone = ({ isSubscribed }: { isSubscribed: boolean }) => {
               <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                 <CloudIcon className='h-6 w-6 text-zinc-500 mb-2' />
                 <p className='mb-2 text-sm text-zinc-700'>
-                  <span className='font-semibold'>Click to upload</span> or drag
-                  and drop
+                  <span className='font-semibold'>To upload</span> Drag
+                  and Drop your file here.
                 </p>
                 <p className='text-xs text-zinc-500'>
                   PDF (up to {isSubscribed ? '16' : '4'}MB)
