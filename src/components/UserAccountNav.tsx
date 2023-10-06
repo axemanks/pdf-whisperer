@@ -35,7 +35,7 @@ const UserAccountNav = async ({
         asChild
         className='overflow-visible'
       >
-        <Button className='rounded-full h-8 w-8 aspect-square bg-slate-400'>
+        <Button className='rounded-full h-8 w-8 aspect-square bg-slate-400 '>
             {/* Avatar */}
           <Avatar className='relative w-8 h-8'>
             {imageUrl ? (

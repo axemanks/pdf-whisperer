@@ -15,7 +15,13 @@ const nextConfig = {
         ]
     },
     images: {
-        domains: ['lh3.googleusercontent.com', 'avatars.githubusercontent.com'],
+        domains: [ 'lh3.googleusercontent.com', 'avatars.githubusercontent.com' ],
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: '*.googleusercontent.com',
+            }
+        ]
     },
 
     webpack: (
